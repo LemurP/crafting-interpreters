@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.List;
 
 public class Klox {
 
@@ -53,8 +54,17 @@ public class Klox {
   }
 
   private static void run(String source) {
-    System.out.println("This interpreter is currently not functional. Input was: " + source);
-    //Scanner scanner = new Scanner(source);
-    //List<Token> tokens = scanner.scanTokens();
+    Scanner scanner = new Scanner(source);
+    List<Token> tokens = scanner.scanTokens();
+
+    for (Token token : tokens) {
+      System.out.println(token);
+    }
+  }
+
+  public static void error(int line, String errorMessage) {
+    System.out.println("Error at line: " + line);
+    System.out.println("Reason: " + errorMessage);
+    hadError=true;
   }
 }
