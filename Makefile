@@ -1,22 +1,22 @@
 BUILD_DIR := build
 
+default: klox
 # Remove all build outputs and intermediate files.
 clean:
 	@ rm -rf $(BUILD_DIR)
 	@ rm -rf gen
+	@ rm klox.jar
 
-klox: generate_ast
+klox:
 	@ $(MAKE) -f util/java.make DIR=src PACKAGE=klox
-	cd build/src
-	jar --create --file=klox.jar --main-class=no.bok.craftinginterpreters.klox.Klox .
-	cd ../..
+	cd build/src &&	jar --create --file=klox.jar --main-class=no.bok.craftinginterpreters.klox.Klox .
 	cp build/src/klox.jar klox.jar
 
 # Kjoer ved aa kalle java -jar klox.jar <.klox-fil>
 #Finn ut hvordan jeg gjør den til en ordentlig executable
 
-build:
-	javac src/no/bok/craftinginterpreters/klox/*.java -d build
+test: klox
+	cd ../craftinginterpreters && dart tool/bin/test.dart chap12_classes --interpreter ../klox/klox
 # Compile and run the AST generator.
 generate_ast:
 	@ $(MAKE) -f util/java.make DIR=src PACKAGE=tool
