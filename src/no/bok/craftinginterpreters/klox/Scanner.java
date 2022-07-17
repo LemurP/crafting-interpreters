@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.craftinginterpreters.lox.TokenType.*; // [static-import]
+import static no.bok.craftinginterpreters.klox.TokenType.*;
 
 class Scanner {
   private static final Map<String, TokenType> keywords;
@@ -100,7 +100,7 @@ class Scanner {
         } else if (isAlpha(c)) {
           identifier();
         } else {
-          Lox.error(line, "Unexpected character.");
+          Klox.error(line, "Unexpected character.");
         }
         break;
     }
@@ -134,7 +134,7 @@ class Scanner {
     }
 
     if (isAtEnd()) {
-      Lox.error(line, "Unterminated string.");
+      Klox.error(line, "Unterminated string.");
       return;
     }
 

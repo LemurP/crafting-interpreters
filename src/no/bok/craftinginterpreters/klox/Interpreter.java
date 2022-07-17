@@ -33,7 +33,7 @@ class Interpreter implements Expr.Visitor<Object>,
         execute(statement);
       }
     } catch (RuntimeError error) {
-      Lox.runtimeError(error);
+      Klox.runtimeError(error);
     }
   }
   private Object evaluate(Expr expr) {

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.craftinginterpreters.lox.TokenType.*;
+import static no.bok.craftinginterpreters.klox.TokenType.*;
 
 class Parser {
   private static class ParseError extends RuntimeException {}
@@ -347,7 +347,7 @@ class Parser {
     return tokens.get(current - 1);
   }
   private ParseError error(Token token, String message) {
-    Lox.error(token, message);
+    Klox.error(token, message);
     return new ParseError();
   }
   private void synchronize() {
