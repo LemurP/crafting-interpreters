@@ -1,6 +1,7 @@
 package no.bok.craftinginterpreters.klox;
 
 import java.util.List;
+import no.bok.craftinginterpreters.klox.Stmt.Class;
 
 class AstPrinter implements Expr.Visitor<String>, Stmt.Visitor<String> {
 
@@ -18,6 +19,19 @@ class AstPrinter implements Expr.Visitor<String>, Stmt.Visitor<String> {
     builder.append("(block ");
 
     for (Stmt statement : stmt.statements) {
+      builder.append(statement.accept(this));
+    }
+
+    builder.append(")");
+    return builder.toString();
+  }
+
+  @Override
+  public String visitClassStmt(Class stmt) {
+    StringBuilder builder = new StringBuilder();
+    builder.append("(class ");
+    builder.append(stmt.name);
+    for (Stmt statement : stmt.methods) {
       builder.append(statement.accept(this));
     }
 

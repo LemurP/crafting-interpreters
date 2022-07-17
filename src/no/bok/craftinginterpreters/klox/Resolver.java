@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
+import no.bok.craftinginterpreters.klox.Stmt.Class;
 
 class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
 
@@ -31,6 +32,13 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
     beginScope();
     resolve(stmt.statements);
     endScope();
+    return null;
+  }
+
+  @Override
+  public Void visitClassStmt(Class stmt) {
+    declare(stmt.name);
+    define(stmt.name);
     return null;
   }
 

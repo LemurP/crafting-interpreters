@@ -3,6 +3,7 @@ package no.bok.craftinginterpreters.klox;
 import static no.bok.craftinginterpreters.klox.TokenType.AND;
 import static no.bok.craftinginterpreters.klox.TokenType.BANG;
 import static no.bok.craftinginterpreters.klox.TokenType.BANG_EQUAL;
+import static no.bok.craftinginterpreters.klox.TokenType.CLASS;
 import static no.bok.craftinginterpreters.klox.TokenType.COMMA;
 import static no.bok.craftinginterpreters.klox.TokenType.ELSE;
 import static no.bok.craftinginterpreters.klox.TokenType.EOF;
