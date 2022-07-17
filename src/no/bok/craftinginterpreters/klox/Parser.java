@@ -39,6 +39,7 @@ import static no.bok.craftinginterpreters.klox.TokenType.WHILE;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import no.bok.craftinginterpreters.klox.Stmt.Class;
 
 class Parser {
 
@@ -68,6 +69,9 @@ class Parser {
 
   private Stmt declaration() {
     try {
+      if (match(CLASS)) {
+        return classDeclaration();
+      }
       if (match(FUN)) {
         return function("function");
       }
@@ -80,6 +84,19 @@ class Parser {
       synchronize();
       return null;
     }
+  }
+
+  private Stmt classDeclaration() {
+    Token name = consume(IDENTIFIER, "Expect class name.");
+    consume(LEFT_BRACE, "Expect '{' before class body.");
+
+    List<Stmt.Function> methods = new ArrayList<>();
+    while (!check(RIGHT_BRACE) && !isAtEnd()) {
+      methods.add(function("method"));
+    }
+    consume(RIGHT_BRACE, "Expect '}' after class body.");
+
+    return new Class(name, methods);
   }
 
   private Stmt statement() {
