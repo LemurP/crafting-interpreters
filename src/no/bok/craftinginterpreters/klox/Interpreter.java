@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import no.bok.craftinginterpreters.klox.Expr.Get;
 
 class Interpreter implements Expr.Visitor<Object>,
     Stmt.Visitor<Void> {
@@ -225,6 +226,16 @@ class Interpreter implements Expr.Visitor<Object>,
     }
 
     return function.call(this, arguments);
+  }
+
+  @Override
+  public Object visitGetExpr(Get expr) {
+    Object object = evaluate(expr.object);
+    if (object instanceof LoxInstance) {
+      return ((LoxInstance) object).get(expr.name);
+    }
+
+    throw new RuntimeError(expr.name, "Only instances have properties.");
   }
 
   @Override

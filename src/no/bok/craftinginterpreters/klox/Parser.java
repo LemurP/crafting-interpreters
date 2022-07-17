@@ -5,6 +5,7 @@ import static no.bok.craftinginterpreters.klox.TokenType.BANG;
 import static no.bok.craftinginterpreters.klox.TokenType.BANG_EQUAL;
 import static no.bok.craftinginterpreters.klox.TokenType.CLASS;
 import static no.bok.craftinginterpreters.klox.TokenType.COMMA;
+import static no.bok.craftinginterpreters.klox.TokenType.DOT;
 import static no.bok.craftinginterpreters.klox.TokenType.ELSE;
 import static no.bok.craftinginterpreters.klox.TokenType.EOF;
 import static no.bok.craftinginterpreters.klox.TokenType.EQUAL;
@@ -380,6 +381,9 @@ class Parser {
     while (true) { // [while-true]
       if (match(LEFT_PAREN)) {
         expr = finishCall(expr);
+      } else if (match(DOT)) {
+        Token name = consume(IDENTIFIER, "Expect property name after '.'.");
+        expr = new Expr.Get(expr,name);
       } else {
         break;
       }

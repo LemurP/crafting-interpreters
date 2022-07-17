@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
+import no.bok.craftinginterpreters.klox.Expr.Get;
 import no.bok.craftinginterpreters.klox.Stmt.Class;
 
 class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
@@ -125,6 +126,12 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
       resolve(argument);
     }
 
+    return null;
+  }
+
+  @Override
+  public Void visitGetExpr(Get expr) {
+    resolve(expr.object);
     return null;
   }
 

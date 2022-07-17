@@ -1,6 +1,7 @@
 package no.bok.craftinginterpreters.klox;
 
 import java.util.List;
+import no.bok.craftinginterpreters.klox.Expr.Get;
 import no.bok.craftinginterpreters.klox.Stmt.Class;
 
 class AstPrinter implements Expr.Visitor<String>, Stmt.Visitor<String> {
@@ -117,6 +118,11 @@ class AstPrinter implements Expr.Visitor<String>, Stmt.Visitor<String> {
   @Override
   public String visitCallExpr(Expr.Call expr) {
     return parenthesize2("call", expr.callee, expr.arguments);
+  }
+
+  @Override
+  public String visitGetExpr(Get expr) {
+    return null;
   }
 
   @Override
