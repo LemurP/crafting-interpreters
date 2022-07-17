@@ -1,6 +1,7 @@
 package no.bok.craftinginterpreters.klox;
 
 class Token {
+
   final TokenType type;
   final String lexeme;
   final Object literal;

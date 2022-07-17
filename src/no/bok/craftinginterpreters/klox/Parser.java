@@ -1,13 +1,50 @@
 package no.bok.craftinginterpreters.klox;
 
+import static no.bok.craftinginterpreters.klox.TokenType.AND;
+import static no.bok.craftinginterpreters.klox.TokenType.BANG;
+import static no.bok.craftinginterpreters.klox.TokenType.BANG_EQUAL;
+import static no.bok.craftinginterpreters.klox.TokenType.COMMA;
+import static no.bok.craftinginterpreters.klox.TokenType.ELSE;
+import static no.bok.craftinginterpreters.klox.TokenType.EOF;
+import static no.bok.craftinginterpreters.klox.TokenType.EQUAL;
+import static no.bok.craftinginterpreters.klox.TokenType.EQUAL_EQUAL;
+import static no.bok.craftinginterpreters.klox.TokenType.FALSE;
+import static no.bok.craftinginterpreters.klox.TokenType.FOR;
+import static no.bok.craftinginterpreters.klox.TokenType.FUN;
+import static no.bok.craftinginterpreters.klox.TokenType.GREATER;
+import static no.bok.craftinginterpreters.klox.TokenType.GREATER_EQUAL;
+import static no.bok.craftinginterpreters.klox.TokenType.IDENTIFIER;
+import static no.bok.craftinginterpreters.klox.TokenType.IF;
+import static no.bok.craftinginterpreters.klox.TokenType.LEFT_BRACE;
+import static no.bok.craftinginterpreters.klox.TokenType.LEFT_PAREN;
+import static no.bok.craftinginterpreters.klox.TokenType.LESS;
+import static no.bok.craftinginterpreters.klox.TokenType.LESS_EQUAL;
+import static no.bok.craftinginterpreters.klox.TokenType.MINUS;
+import static no.bok.craftinginterpreters.klox.TokenType.NIL;
+import static no.bok.craftinginterpreters.klox.TokenType.NUMBER;
+import static no.bok.craftinginterpreters.klox.TokenType.OR;
+import static no.bok.craftinginterpreters.klox.TokenType.PLUS;
+import static no.bok.craftinginterpreters.klox.TokenType.PRINT;
+import static no.bok.craftinginterpreters.klox.TokenType.RETURN;
+import static no.bok.craftinginterpreters.klox.TokenType.RIGHT_BRACE;
+import static no.bok.craftinginterpreters.klox.TokenType.RIGHT_PAREN;
+import static no.bok.craftinginterpreters.klox.TokenType.SEMICOLON;
+import static no.bok.craftinginterpreters.klox.TokenType.SLASH;
+import static no.bok.craftinginterpreters.klox.TokenType.STAR;
+import static no.bok.craftinginterpreters.klox.TokenType.STRING;
+import static no.bok.craftinginterpreters.klox.TokenType.TRUE;
+import static no.bok.craftinginterpreters.klox.TokenType.VAR;
+import static no.bok.craftinginterpreters.klox.TokenType.WHILE;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static no.bok.craftinginterpreters.klox.TokenType.*;
-
 class Parser {
-  private static class ParseError extends RuntimeException {}
+
+  private static class ParseError extends RuntimeException {
+
+  }
 
   private final List<Token> tokens;
   private int current = 0;
@@ -15,6 +52,7 @@ class Parser {
   Parser(List<Token> tokens) {
     this.tokens = tokens;
   }
+
   List<Stmt> parse() {
     List<Stmt> statements = new ArrayList<>();
     while (!isAtEnd()) {
@@ -23,13 +61,19 @@ class Parser {
 
     return statements; // [parse-error-handling]
   }
+
   private Expr expression() {
     return assignment();
   }
+
   private Stmt declaration() {
     try {
-      if (match(FUN)) return function("function");
-      if (match(VAR)) return varDeclaration();
+      if (match(FUN)) {
+        return function("function");
+      }
+      if (match(VAR)) {
+        return varDeclaration();
+      }
 
       return statement();
     } catch (ParseError error) {
@@ -37,16 +81,30 @@ class Parser {
       return null;
     }
   }
+
   private Stmt statement() {
-    if (match(FOR)) return forStatement();
-    if (match(IF)) return ifStatement();
-    if (match(PRINT)) return printStatement();
-    if (match(RETURN)) return returnStatement();
-    if (match(WHILE)) return whileStatement();
-    if (match(LEFT_BRACE)) return new Stmt.Block(block());
+    if (match(FOR)) {
+      return forStatement();
+    }
+    if (match(IF)) {
+      return ifStatement();
+    }
+    if (match(PRINT)) {
+      return printStatement();
+    }
+    if (match(RETURN)) {
+      return returnStatement();
+    }
+    if (match(WHILE)) {
+      return whileStatement();
+    }
+    if (match(LEFT_BRACE)) {
+      return new Stmt.Block(block());
+    }
 
     return expressionStatement();
   }
+
   private Stmt forStatement() {
     consume(LEFT_PAREN, "Expect '(' after 'for'.");
 
@@ -79,7 +137,9 @@ class Parser {
               new Stmt.Expression(increment)));
     }
 
-    if (condition == null) condition = new Expr.Literal(true);
+    if (condition == null) {
+      condition = new Expr.Literal(true);
+    }
     body = new Stmt.While(condition, body);
 
     if (initializer != null) {
@@ -88,6 +148,7 @@ class Parser {
 
     return body;
   }
+
   private Stmt ifStatement() {
     consume(LEFT_PAREN, "Expect '(' after 'if'.");
     Expr condition = expression();
@@ -101,11 +162,13 @@ class Parser {
 
     return new Stmt.If(condition, thenBranch, elseBranch);
   }
+
   private Stmt printStatement() {
     Expr value = expression();
     consume(SEMICOLON, "Expect ';' after value.");
     return new Stmt.Print(value);
   }
+
   private Stmt returnStatement() {
     Token keyword = previous();
     Expr value = null;
@@ -116,6 +179,7 @@ class Parser {
     consume(SEMICOLON, "Expect ';' after return value.");
     return new Stmt.Return(keyword, value);
   }
+
   private Stmt varDeclaration() {
     Token name = consume(IDENTIFIER, "Expect variable name.");
 
@@ -127,6 +191,7 @@ class Parser {
     consume(SEMICOLON, "Expect ';' after variable declaration.");
     return new Stmt.Var(name, initializer);
   }
+
   private Stmt whileStatement() {
     consume(LEFT_PAREN, "Expect '(' after 'while'.");
     Expr condition = expression();
@@ -135,11 +200,13 @@ class Parser {
 
     return new Stmt.While(condition, body);
   }
+
   private Stmt expressionStatement() {
     Expr expr = expression();
     consume(SEMICOLON, "Expect ';' after expression.");
     return new Stmt.Expression(expr);
   }
+
   private Stmt.Function function(String kind) {
     Token name = consume(IDENTIFIER, "Expect " + kind + " name.");
     consume(LEFT_PAREN, "Expect '(' after " + kind + " name.");
@@ -160,6 +227,7 @@ class Parser {
     List<Stmt> body = block();
     return new Stmt.Function(name, parameters, body);
   }
+
   private List<Stmt> block() {
     List<Stmt> statements = new ArrayList<>();
 
@@ -170,6 +238,7 @@ class Parser {
     consume(RIGHT_BRACE, "Expect '}' after block.");
     return statements;
   }
+
   private Expr assignment() {
     Expr expr = or();
 
@@ -178,7 +247,7 @@ class Parser {
       Expr value = assignment();
 
       if (expr instanceof Expr.Variable) {
-        Token name = ((Expr.Variable)expr).name;
+        Token name = ((Expr.Variable) expr).name;
         return new Expr.Assign(name, value);
       }
 
@@ -187,6 +256,7 @@ class Parser {
 
     return expr;
   }
+
   private Expr or() {
     Expr expr = and();
 
@@ -198,6 +268,7 @@ class Parser {
 
     return expr;
   }
+
   private Expr and() {
     Expr expr = equality();
 
@@ -209,6 +280,7 @@ class Parser {
 
     return expr;
   }
+
   private Expr equality() {
     Expr expr = comparison();
 
@@ -220,6 +292,7 @@ class Parser {
 
     return expr;
   }
+
   private Expr comparison() {
     Expr expr = term();
 
@@ -231,6 +304,7 @@ class Parser {
 
     return expr;
   }
+
   private Expr term() {
     Expr expr = factor();
 
@@ -242,6 +316,7 @@ class Parser {
 
     return expr;
   }
+
   private Expr factor() {
     Expr expr = unary();
 
@@ -253,6 +328,7 @@ class Parser {
 
     return expr;
   }
+
   private Expr unary() {
     if (match(BANG, MINUS)) {
       Token operator = previous();
@@ -262,6 +338,7 @@ class Parser {
 
     return call();
   }
+
   private Expr finishCall(Expr callee) {
     List<Expr> arguments = new ArrayList<>();
     if (!check(RIGHT_PAREN)) {
@@ -274,10 +351,11 @@ class Parser {
     }
 
     Token paren = consume(RIGHT_PAREN,
-                          "Expect ')' after arguments.");
+        "Expect ')' after arguments.");
 
     return new Expr.Call(callee, paren, arguments);
   }
+
   private Expr call() {
     Expr expr = primary();
 
@@ -291,10 +369,17 @@ class Parser {
 
     return expr;
   }
+
   private Expr primary() {
-    if (match(FALSE)) return new Expr.Literal(false);
-    if (match(TRUE)) return new Expr.Literal(true);
-    if (match(NIL)) return new Expr.Literal(null);
+    if (match(FALSE)) {
+      return new Expr.Literal(false);
+    }
+    if (match(TRUE)) {
+      return new Expr.Literal(true);
+    }
+    if (match(NIL)) {
+      return new Expr.Literal(null);
+    }
 
     if (match(NUMBER, STRING)) {
       return new Expr.Literal(previous().literal);
@@ -312,6 +397,7 @@ class Parser {
 
     throw error(peek(), "Expect expression.");
   }
+
   private boolean match(TokenType... types) {
     for (TokenType type : types) {
       if (check(type)) {
@@ -322,19 +408,29 @@ class Parser {
 
     return false;
   }
+
   private Token consume(TokenType type, String message) {
-    if (check(type)) return advance();
+    if (check(type)) {
+      return advance();
+    }
 
     throw error(peek(), message);
   }
+
   private boolean check(TokenType type) {
-    if (isAtEnd()) return false;
+    if (isAtEnd()) {
+      return false;
+    }
     return peek().type == type;
   }
+
   private Token advance() {
-    if (!isAtEnd()) current++;
+    if (!isAtEnd()) {
+      current++;
+    }
     return previous();
   }
+
   private boolean isAtEnd() {
     return peek().type == EOF;
   }
@@ -346,15 +442,19 @@ class Parser {
   private Token previous() {
     return tokens.get(current - 1);
   }
+
   private ParseError error(Token token, String message) {
     Klox.error(token, message);
     return new ParseError();
   }
+
   private void synchronize() {
     advance();
 
     while (!isAtEnd()) {
-      if (previous().type == SEMICOLON) return;
+      if (previous().type == SEMICOLON) {
+        return;
+      }
 
       switch (peek().type) {
         case CLASS:
