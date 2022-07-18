@@ -14,7 +14,7 @@ public class LoxInstance {
 
   @Override
   public String toString() {
-    return klass.name + " instance.";
+    return klass.name + " instance";
   }
 
   public Object get(Token name) {
