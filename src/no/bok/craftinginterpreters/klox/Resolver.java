@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Stack;
 import no.bok.craftinginterpreters.klox.Expr.Get;
 import no.bok.craftinginterpreters.klox.Expr.Set;
+import no.bok.craftinginterpreters.klox.Expr.This;
 import no.bok.craftinginterpreters.klox.Stmt.Class;
 
 class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
@@ -24,6 +25,13 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
     METHOD
   }
 
+  private enum ClassType {
+    NONE,
+    CLASS
+  }
+
+  private ClassType currentClass = ClassType.NONE;
+
   void resolve(List<Stmt> statements) {
     for (Stmt statement : statements) {
       resolve(statement);
@@ -40,12 +48,23 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
 
   @Override
   public Void visitClassStmt(Class stmt) {
+    ClassType enclosingClass = currentClass;
+    currentClass = ClassType.CLASS;
+
     declare(stmt.name);
     define(stmt.name);
+
+    beginScope();
+    scopes.peek().put("this", true);
+
     for (Stmt.Function method : stmt.methods) {
       FunctionType declaration = FunctionType.METHOD;
       resolveFunction(method, declaration);
     }
+
+    endScope();
+
+    currentClass = enclosingClass;
     return null;
   }
 
@@ -163,6 +182,16 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
   public Void visitSetExpr(Set expr) {
     resolve(expr.value);
     resolve(expr.object);
+    return null;
+  }
+
+  @Override
+  public Void visitThisExpr(This expr) {
+    if (currentClass == ClassType.NONE) {
+      Klox.error(expr.keyword, "Can't use 'this' outside of a class.");
+      return null;
+    }
+    resolveLocal(expr, expr.keyword);
     return null;
   }
 

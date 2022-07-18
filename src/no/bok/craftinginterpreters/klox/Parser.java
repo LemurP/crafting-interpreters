@@ -34,6 +34,7 @@ import static no.bok.craftinginterpreters.klox.TokenType.SEMICOLON;
 import static no.bok.craftinginterpreters.klox.TokenType.SLASH;
 import static no.bok.craftinginterpreters.klox.TokenType.STAR;
 import static no.bok.craftinginterpreters.klox.TokenType.STRING;
+import static no.bok.craftinginterpreters.klox.TokenType.THIS;
 import static no.bok.craftinginterpreters.klox.TokenType.TRUE;
 import static no.bok.craftinginterpreters.klox.TokenType.VAR;
 import static no.bok.craftinginterpreters.klox.TokenType.WHILE;
@@ -409,6 +410,10 @@ class Parser {
 
     if (match(NUMBER, STRING)) {
       return new Expr.Literal(previous().literal);
+    }
+
+    if (match(THIS)) {
+      return new Expr.This(previous());
     }
 
     if (match(IDENTIFIER)) {

@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import no.bok.craftinginterpreters.klox.Expr.Get;
 import no.bok.craftinginterpreters.klox.Expr.Set;
+import no.bok.craftinginterpreters.klox.Expr.This;
 
 class Interpreter implements Expr.Visitor<Object>,
     Stmt.Visitor<Void> {
@@ -280,6 +281,11 @@ class Interpreter implements Expr.Visitor<Object>,
     Object value = evaluate(expr.value);
     ((LoxInstance) object).set(expr.name, value);
     return value;
+  }
+
+  @Override
+  public Object visitThisExpr(This expr) {
+    return lookUpVariable(expr.keyword, expr);
   }
 
   @Override
