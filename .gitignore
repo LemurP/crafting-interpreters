@@ -33,3 +33,4 @@ bin/
 
 ### Klox specific ###
 klox.jar
+build
