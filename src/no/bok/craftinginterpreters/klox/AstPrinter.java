@@ -2,6 +2,7 @@ package no.bok.craftinginterpreters.klox;
 
 import java.util.List;
 import no.bok.craftinginterpreters.klox.Expr.Get;
+import no.bok.craftinginterpreters.klox.Expr.Set;
 import no.bok.craftinginterpreters.klox.Stmt.Class;
 
 class AstPrinter implements Expr.Visitor<String>, Stmt.Visitor<String> {
@@ -141,6 +142,11 @@ class AstPrinter implements Expr.Visitor<String>, Stmt.Visitor<String> {
   @Override
   public String visitLogicalExpr(Expr.Logical expr) {
     return parenthesize(expr.operator.lexeme, expr.left, expr.right);
+  }
+
+  @Override
+  public String visitSetExpr(Set expr) {
+    return null;
   }
 
   @Override

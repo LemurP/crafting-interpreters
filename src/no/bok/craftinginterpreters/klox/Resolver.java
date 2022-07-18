@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 import no.bok.craftinginterpreters.klox.Expr.Get;
+import no.bok.craftinginterpreters.klox.Expr.Set;
 import no.bok.craftinginterpreters.klox.Stmt.Class;
 
 class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
@@ -19,7 +20,8 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
 
   private enum FunctionType {
     NONE,
-    FUNCTION
+    FUNCTION,
+    METHOD
   }
 
   void resolve(List<Stmt> statements) {
@@ -40,6 +42,10 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
   public Void visitClassStmt(Class stmt) {
     declare(stmt.name);
     define(stmt.name);
+    for (Stmt.Function method : stmt.methods) {
+      FunctionType declaration = FunctionType.METHOD;
+      resolveFunction(method, declaration);
+    }
     return null;
   }
 
@@ -150,6 +156,13 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
   public Void visitLogicalExpr(Expr.Logical expr) {
     resolve(expr.left);
     resolve(expr.right);
+    return null;
+  }
+
+  @Override
+  public Void visitSetExpr(Set expr) {
+    resolve(expr.value);
+    resolve(expr.object);
     return null;
   }
 

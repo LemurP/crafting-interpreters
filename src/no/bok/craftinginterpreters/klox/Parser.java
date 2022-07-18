@@ -41,6 +41,7 @@ import static no.bok.craftinginterpreters.klox.TokenType.WHILE;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import no.bok.craftinginterpreters.klox.Expr.Set;
 import no.bok.craftinginterpreters.klox.Stmt.Class;
 
 class Parser {
@@ -268,6 +269,9 @@ class Parser {
       if (expr instanceof Expr.Variable) {
         Token name = ((Expr.Variable) expr).name;
         return new Expr.Assign(name, value);
+      } else if (expr instanceof Expr.Get) {
+        Expr.Get get = (Expr.Get) expr;
+        return new Set(get.object, get.name, value);
       }
 
       error(equals, "Invalid assignment target."); // [no-throw]
@@ -383,7 +387,7 @@ class Parser {
         expr = finishCall(expr);
       } else if (match(DOT)) {
         Token name = consume(IDENTIFIER, "Expect property name after '.'.");
-        expr = new Expr.Get(expr,name);
+        expr = new Expr.Get(expr, name);
       } else {
         break;
       }
