@@ -12,15 +12,16 @@ klox:
 	cd build/src &&	jar --create --file=klox.jar --main-class=no.bok.craftinginterpreters.klox.Klox .
 	cp build/src/klox.jar klox.jar
 
-# Kjoer ved aa kalle java -jar klox.jar <.klox-fil>
-#Finn ut hvordan jeg gjør den til en ordentlig executable
+# Run dart pub get on tool directory.
+get:
+	@ cd ./tool; dart pub get
 
 test: klox
-	cd ../craftinginterpreters && dart tool/bin/test.dart chap13_inheritance --interpreter ../klox/klox
+	dart tool/bin/test.dart chap13_inheritance --interpreter ./klox
 # Compile and run the AST generator.
 generate_ast:
 	@ $(MAKE) -f util/java.make DIR=src PACKAGE=tool
 	@ java -cp build/src no.bok.craftinginterpreters.tool.GenerateAst \
 			src/no/bok/craftinginterpreters/klox
 
-.PHONY: klox test generate_ast
+.PHONY: klox test generate_ast get
