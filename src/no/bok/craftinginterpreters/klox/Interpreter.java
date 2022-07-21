@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import no.bok.craftinginterpreters.klox.Expr.Binary;
 import no.bok.craftinginterpreters.klox.Expr.Get;
 import no.bok.craftinginterpreters.klox.Expr.Set;
 import no.bok.craftinginterpreters.klox.Expr.Super;
@@ -205,18 +206,12 @@ class Interpreter implements Expr.Visitor<Object>,
         checkNumberOperands(expr.operator, left, right);
         return (double) left - (double) right;
       case PLUS:
-        if (left instanceof Double && right instanceof Double) {
-          return (double) left + (double) right;
-        } // [plus]
-
-        if (left instanceof String || right instanceof String) {
-          return stringify(left) + stringify(right);
-        }
-
-        throw new RuntimeError(expr.operator,
-            "Operands must be two numbers, two strings, or one string and one number.");
-      case SLASH:
+        return addition(expr, left, right);
+      case SLASH: //Division
         checkNumberOperands(expr.operator, left, right);
+        if ((double) right == 0) {
+          throw new RuntimeError(expr.operator, "Division by zero is not allowed.");
+        }
         return (double) left / (double) right;
       case STAR:
         checkNumberOperands(expr.operator, left, right);
@@ -225,6 +220,19 @@ class Interpreter implements Expr.Visitor<Object>,
 
     // Unreachable.
     return null;
+  }
+
+  private Object addition(Binary expr, Object left, Object right) {
+    if (left instanceof Double && right instanceof Double) {
+      return (double) left + (double) right;
+    } // [plus]
+
+    if (left instanceof String || right instanceof String) {
+      return stringify(left) + stringify(right);
+    }
+
+    throw new RuntimeError(expr.operator,
+        "Operands must be two numbers, two strings, or one string and one number.");
   }
 
   @Override
