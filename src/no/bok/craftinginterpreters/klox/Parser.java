@@ -43,6 +43,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import no.bok.craftinginterpreters.klox.Expr.Set;
+import no.bok.craftinginterpreters.klox.Expr.Variable;
 import no.bok.craftinginterpreters.klox.Stmt.Class;
 
 class Parser {
@@ -92,6 +93,12 @@ class Parser {
 
   private Stmt classDeclaration() {
     Token name = consume(IDENTIFIER, "Expect class name.");
+    Expr.Variable superclass = null;
+    if (match(LESS)) {
+      consume(IDENTIFIER, "Expect superclass name");
+      superclass = new Variable(previous());
+    }
+
     consume(LEFT_BRACE, "Expect '{' before class body.");
 
     List<Stmt.Function> methods = new ArrayList<>();
@@ -100,7 +107,7 @@ class Parser {
     }
     consume(RIGHT_BRACE, "Expect '}' after class body.");
 
-    return new Class(name, methods);
+    return new Class(name, superclass, methods);
   }
 
   private Stmt statement() {

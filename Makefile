@@ -5,7 +5,7 @@ default: klox
 clean:
 	@ rm -rf $(BUILD_DIR)
 	@ rm -rf gen
-	@ rm klox.jar
+	@ rm -f klox.jar
 
 klox:
 	@ $(MAKE) -f util/java.make DIR=src PACKAGE=klox
@@ -16,9 +16,11 @@ klox:
 #Finn ut hvordan jeg gjør den til en ordentlig executable
 
 test: klox
-	cd ../craftinginterpreters && dart tool/bin/test.dart chap12_classes --interpreter ../klox/klox
+	cd ../craftinginterpreters && dart tool/bin/test.dart chap13_inheritance --interpreter ../klox/klox
 # Compile and run the AST generator.
 generate_ast:
 	@ $(MAKE) -f util/java.make DIR=src PACKAGE=tool
 	@ java -cp build/src no.bok.craftinginterpreters.tool.GenerateAst \
 			src/no/bok/craftinginterpreters/klox
+
+.PHONY: klox test generate_ast
