@@ -1,0 +1,1 @@
+print "/* should not be removed from string */ ok"; // expect: /* should not be removed from string */ ok

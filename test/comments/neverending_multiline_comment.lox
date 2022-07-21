@@ -1,0 +1,5 @@
+print "ok"; // expect: ok
+/* comment
+/
+print "ok"; // expect not to be parsed
+everything here will be ignored because the multiline comment is never ended

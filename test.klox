@@ -48,5 +48,11 @@ print "scone" + 4; // Expect: scone4
 print 4 + "scone"; // Expect: 4scone
 
 print 0/2; // Expect: 0
-print 0/0; // Expect: NaN
-print 4/0; // Expect: runtime error
+//print 0/0; // Expect: NaN
+//print 4/0; // Expect: runtime error
+
+/* ignored
+
+print "should be ignored";
+
+*/

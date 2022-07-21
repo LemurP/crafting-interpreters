@@ -1,0 +1,7 @@
+/* /comment
+
+*/
+print "ok"; // expect: ok
+/* comment 2
+
+*/

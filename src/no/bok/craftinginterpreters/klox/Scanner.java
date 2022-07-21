@@ -141,6 +141,20 @@ class Scanner {
           while (peek() != '\n' && !isAtEnd()) {
             advance();
           }
+        } else if (match('*')) {
+          // A multiline comment goes until it finds a */
+          while (true) {
+            boolean matchedMultilineCommentEnding = peek() == '*' && peekNext() == '/';
+            if (matchedMultilineCommentEnding) {
+              // Remove the next two characters which are '*' and '/' before continuing
+              advance();
+              advance();
+              break;
+            } else if (isAtEnd()) {
+              break;
+            }
+            advance();
+          }
         } else {
           addToken(SLASH);
         }
