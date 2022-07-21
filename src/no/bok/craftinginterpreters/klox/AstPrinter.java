@@ -3,6 +3,7 @@ package no.bok.craftinginterpreters.klox;
 import java.util.List;
 import no.bok.craftinginterpreters.klox.Expr.Get;
 import no.bok.craftinginterpreters.klox.Expr.Set;
+import no.bok.craftinginterpreters.klox.Expr.Super;
 import no.bok.craftinginterpreters.klox.Expr.This;
 import no.bok.craftinginterpreters.klox.Stmt.Class;
 
@@ -147,6 +148,11 @@ class AstPrinter implements Expr.Visitor<String>, Stmt.Visitor<String> {
 
   @Override
   public String visitSetExpr(Set expr) {
+    return null;
+  }
+
+  @Override
+  public String visitSuperExpr(Super expr) {
     return null;
   }
 
