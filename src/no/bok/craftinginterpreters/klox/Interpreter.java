@@ -182,7 +182,7 @@ class Interpreter implements Expr.Visitor<Object>,
   @Override
   public Object visitBinaryExpr(Expr.Binary expr) {
     Object left = evaluate(expr.left);
-    Object right = evaluate(expr.right); // [left]
+    Object right = evaluate(expr.right);
 
     switch (expr.operator.type) {
       case BANG_EQUAL:
@@ -209,12 +209,12 @@ class Interpreter implements Expr.Visitor<Object>,
           return (double) left + (double) right;
         } // [plus]
 
-        if (left instanceof String && right instanceof String) {
-          return (String) left + (String) right;
+        if (left instanceof String || right instanceof String) {
+          return stringify(left) + stringify(right);
         }
 
         throw new RuntimeError(expr.operator,
-            "Operands must be two numbers or two strings.");
+            "Operands must be two numbers, two strings, or one string and one number.");
       case SLASH:
         checkNumberOperands(expr.operator, left, right);
         return (double) left / (double) right;

@@ -44,5 +44,5 @@ class BostonCream < Doughnut {
 BostonCream().cook();
 
 // Extensions
-var a = "scone" + 4;
-print a; // Expect: scone4
+print "scone" + 4; // Expect: scone4
+print 4 + "scone"; // Expect: 4scone
